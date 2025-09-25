@@ -142,11 +142,25 @@ void loop()
     }
   }
 
-  // Si no, cada 2s toggle LED
   if (millis() - lastToggle >= 5000)
   {
-    unsigned long elapsed = millis() - lastToggle; // tiempo transcurrido
-    Serial.printf("Haciendo toggle del LED. Pasaron %lu ms\n", elapsed);
+    unsigned long elapsed = millis() - lastToggle;
+
+    float temp = analogReadTemp(); // °C
+
+    size_t freeHeap = rp2040.getFreeHeap();
+    size_t usedHeap = rp2040.getUsedHeap();
+    size_t totalHeap = rp2040.getTotalHeap();
+
+    Serial.printf("\n+----------------+-------------------+\n");
+    Serial.printf("| Dato           | Valor             |\n");
+    Serial.printf("+----------------+-------------------+\n");
+    Serial.printf("| Tiempo         | %lu ms           |\n", elapsed);
+    Serial.printf("| Temp CPU       | %.2f °C           |\n", temp);
+    Serial.printf("| Heap Libre     | %.2f KB           |\n", freeHeap / 1024.0);
+    Serial.printf("| Heap Usado     | %.2f KB           |\n", usedHeap / 1024.0);
+    Serial.printf("| Heap Total     | %.2f KB           |\n", totalHeap / 1024.0);
+    Serial.printf("+----------------+-------------------+\n");
 
     ledState = !ledState;
     digitalWrite(LED_PIN, ledState);
